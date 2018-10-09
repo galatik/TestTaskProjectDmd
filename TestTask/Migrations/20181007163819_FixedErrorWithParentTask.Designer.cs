@@ -2,16 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestTask.Data;
-using TestTask.Models;
 
 namespace TestTask.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181007163819_FixedErrorWithParentTask")]
+    partial class FixedErrorWithParentTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,9 +136,11 @@ namespace TestTask.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ActualCompletionDate");
+                    b.Property<DateTime>("ActualCompletionDate");
 
                     b.Property<TimeSpan>("CompletionTime");
+
+                    b.Property<TimeSpan>("CompletionTimeWithDescendant");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -155,9 +158,10 @@ namespace TestTask.Migrations
 
                     b.Property<int>("PlannedLaboriousness");
 
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(0);
+                    b.Property<int>("PlannedLaboriousnessWithDescendant");
+
+                    b.Property<string>("Status")
+                        .IsRequired();
 
                     b.Property<string>("UserId");
 

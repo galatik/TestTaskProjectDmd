@@ -44,10 +44,22 @@ namespace TestTask.Data
 
             builder.Entity<User>().HasMany<Models.Task>().WithOne(t => t.User).OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Models.Task>().HasOne<Models.Task>().WithMany().HasForeignKey(t => t.ParentTaskId)
+            builder.Entity<Models.Task>().HasOne<Models.Task>(t => t.ParentTask).WithMany().HasForeignKey(t => t.ParentTaskId)
                 .IsRequired(false).OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Models.Task>().Property(t => t.Status).HasConversion(new EnumToStringConverter<Models.TaskStatus>());
+            builder.Entity<Models.Task>().Property(t => t.Status).HasConversion(new EnumToNumberConverter<Models.TaskStatus,int>());
+
+            
+
+            builder.Entity<Models.Task>().Property(t => t.ActualCompletionDate).IsRequired(false);
+
+            
+
+            builder.Entity<Models.Task>().Property(t => t.Status).HasDefaultValue(Models.TaskStatus.Assigned);
+
+            builder.Entity<Models.Task>().Property(t => t.Performers).IsRequired(false);
+
+            builder.Entity<Models.Task>().Property(t => t.Description).IsRequired(false);
         }
 
     }

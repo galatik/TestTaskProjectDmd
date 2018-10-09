@@ -11,5 +11,8 @@ namespace TestTask.Models
     {
         [MaxLength(36)]
         public override string Id { get; set; }
+
+
+
     }
 }

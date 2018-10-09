@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestTask.Data;
 using TestTask.Models;
@@ -9,9 +10,10 @@ using TestTask.Models;
 namespace TestTask.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181008155858_AddedDefaultValuesAndNullable")]
+    partial class AddedDefaultValuesAndNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,6 +141,8 @@ namespace TestTask.Migrations
 
                     b.Property<TimeSpan>("CompletionTime");
 
+                    b.Property<TimeSpan?>("CompletionTimeWithDescendant");
+
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("Description")
@@ -154,6 +158,8 @@ namespace TestTask.Migrations
                         .HasMaxLength(300);
 
                     b.Property<int>("PlannedLaboriousness");
+
+                    b.Property<int?>("PlannedLaboriousnessWithDescendant");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()

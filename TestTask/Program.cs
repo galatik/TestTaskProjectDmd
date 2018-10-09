@@ -7,6 +7,10 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using TestTask.Data;
+using TestTask.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace TestTask
 {
@@ -14,7 +18,21 @@ namespace TestTask
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                
+                var context = services.GetRequiredService<ApplicationDbContext>();
+
+                var userManager = services.GetRequiredService<UserManager<User>>();
+
+                DbInitializer.Initialize(context, userManager);
+                
+            }
+
+            host.Run();
+            
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

@@ -41,26 +41,15 @@ namespace TestTask.Data
                 context.Database.ExecuteSqlCommand(
                         $"create procedure getAllTaskDescendants(in taskid int(11)) " +
                         $"BEGIN " +
-                            $"WITH recursive task_path (id, name, path) as ( " +
-                            $"select id, name, CAST(id AS CHAR(200)) from tasks " +
+                            $"WITH recursive task_path as ( " +
+                            $"select id, name, Description, Performers, CreationDate, Status, PlannedLaboriousness, " +
+                            $"CompletionTime, ActualCompletionDate, UserId, CAST(id AS CHAR(200)) as path from tasks " +
                             $"where id = taskid " +
                             $"union all " +
-                            $"select t.id, t.name, concat(tp.path,',',t.parenttaskid) " +
+                            $"select t.id, t.name, t.Description, t.Performers, t.CreationDate, t.Status, t.PlannedLaboriousness, " +
+                            $"t.CompletionTime, t.ActualCompletionDate, t.UserId, concat(tp.path,',',t.id) as path " +
                             $"from tasks as t join task_path as tp " +
-                            $"on tp.id = t.parenttaskid ) SELECT * from task_path " +
-                            $"where id != taskid; " +
-                        $"END");
-                context.Database.ExecuteSqlCommand(
-                        $"create procedure getAllTaskParents(in taskid int(11)) " +
-                        $"BEGIN " +
-                            $"WITH recursive task_path (id, name, path, parenttaskid) as ( " +
-                            $"select id, name, CAST(id AS CHAR(200)), parenttaskid from tasks " +
-                            $"where id = taskid " +
-                            $"union all " +
-                            $"select t.id, t.name, concat(t.parenttaskid,',',tp.path), t.ParentTaskId " +
-                            $"from tasks as t join task_path as tp " +
-                            $"on tp.parenttaskid = t.id ) SELECT * from task_path " +
-                            $"where id != taskid; " +
+                            $"on tp.id = t.parenttaskid ) SELECT * from task_path; " +
                         $"END");
             }
             

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using TestTask.Data;
 using TestTask.Models;
+using TestTask.Services;
 
 namespace TestTask
 {
@@ -28,7 +29,6 @@ namespace TestTask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -36,6 +36,8 @@ namespace TestTask
             });
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<TaskService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

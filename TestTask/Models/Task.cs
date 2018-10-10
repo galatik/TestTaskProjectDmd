@@ -41,8 +41,8 @@ namespace TestTask.Models
 
         public string UserId { get; set; }
 
-        public int? ParentTaskId { get; set; }
+        public virtual int? ParentTaskId { get; set; }
 
-        public Task ParentTask { get; set; }
+        public  Task ParentTask { get; set; }
     }
 }

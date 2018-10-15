@@ -101,12 +101,12 @@ namespace TestTask.Controllers
 
             if(id == null)
             {
-                return View(new Models.Task() { UserId = _userManager.GetUserId(User)});
+                return View(new Models.Task());
             }
 
             if(await _taskService.HasUserTask((int)id, _userManager.GetUserId(User)))
             {
-                return View(new Models.Task() { ParentTaskId = id, UserId = _userManager.GetUserId(User) });
+                return View(new Models.Task() { ParentTaskId = id });
             }
 
             return NotFound();

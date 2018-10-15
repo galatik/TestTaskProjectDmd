@@ -1,0 +1,13 @@
+﻿.height {
+    height: 100vh;
+}
+
+.wrappp {
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+
+.invalid-input {
+    color: #de5561;
+}

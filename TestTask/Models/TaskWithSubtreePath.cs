@@ -12,26 +12,6 @@ namespace TestTask.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
-       
-        public string Description { get; set; }
-
-        public string Performers { get; set; }
-
-        public DateTime CreationDate { get; set; }
-
-        public TaskStatus Status { get; set; }
-
-        public int PlannedLaboriousness { get; set; }
-
-        [NotMapped]
-        public int PlannedLaboriousnessWithDescendant { get; set; }
-
-        public TimeSpan CompletionTime { get; set; }
-
-        [NotMapped]
-        public TimeSpan CompletionTimeWithDescendant { get; set; }
-
-        public DateTime? ActualCompletionDate { get; set; }
 
         public string UserId { get; set; }
 
@@ -45,6 +25,10 @@ namespace TestTask.Models
         {
             get
             {
+                if (Path == null)
+                {
+                    return null;
+                }
                 if(_idOfParents == null)
                 {
                     _idOfParents = new List<int>();
@@ -61,18 +45,9 @@ namespace TestTask.Models
             }
         }
 
-        public  int? ParentTaskId
-        {
-            get
-            {
-                var count = IdOfParents.Count();
-                if(count < 2)
-                {
-                    return null;
-                }
-                return IdOfParents[IdOfParents.Count() - 2];
-            }
-        }
+        
+        public  int? ParentTaskId { get; set; }
+       
 
 
     }

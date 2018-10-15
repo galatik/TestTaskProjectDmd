@@ -1,0 +1,40 @@
+﻿@model List<Node<TestTask.Models.TaskWithSubtreePath>>
+@inject TaskService taskService
+
+<ul>
+    @foreach (var subnode in Model)
+    {
+        var hasSubNodes = subnode.SubNodes != null && subnode.SubNodes.Count() != 0;
+        string src;
+        if (hasSubNodes)
+        {
+            src = "https://png.icons8.com/windows/15/000000/expand-arrow.png";
+        }
+        else
+        {
+            src = "https://png.icons8.com/ios-glyphs/15/000000/forward.png";
+        }
+
+        string classs = "";
+
+        if(ViewData["taskid"] != null && subnode.Value.Id == (int) ViewData["taskid"])
+        {
+            classs = "selected-task";
+        }
+        <li>
+
+            <div class="d-flex align-items-center hui ">
+                <img src="@src">
+                <a class="@classs" asp-action="index" asp-controller="task" asp-route-id="@subnode.Value.Id">@subnode.Value.Name</a>
+            </div>
+
+            @if(hasSubNodes)
+            {
+                <partial name="_SubTasksPartialView" model="subnode.SubNodes"/>
+            }
+
+        </li>
+    }
+</ul>
+
+

@@ -1,37 +1,78 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿
+body{
+    min-height: 900px;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.left-nav {
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+    .left-nav ul {
+        padding-left: 12px;
+        list-style: none;
     }
+
+    .left-nav li {
+        margin-top: 6px;
+    }
+
+    .left-nav a {
+        color: black;
+    }
+
+        .left-nav a:hover {
+            color: #2a7bff
+        }
+
+.left-nav-head {
+    padding: 6px;
+    background-color: #2a7bff;
+    color: white;
 }
+
+.selected-task {
+    color: #2a7bff !important;
+    text-decoration: underline;
+}
+
+
+.nav-task-wrap {
+    overflow: scroll;
+    height: 500px;
+}
+
+.username{
+    color: white !important;
+}
+
+.header{
+    margin-bottom: 20px;
+}
+
+.task-info-header {
+    height: 70px;
+}
+
+.subtasks-info-conteiner {
+    margin-top: 20px;
+}
+
+.subtasks-info-header {
+    height: 50px !important;
+    color: white;
+}
+
+.task-btn-wrapp {
+    height: 80px !important;
+}
+
+
+.task-btn-create {
+    color: white;
+}
+
+.task-btn-create-wrapp{
+    margin-top: 15px;
+}
+
+
+

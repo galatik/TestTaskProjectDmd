@@ -1,0 +1,112 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@inject TaskService taskService
+@inject UserManager<User> userManager
+
+@{ 
+    var userid = userManager.GetUserId(User);
+
+    var terminalTasks = await taskService.GetTerminalTasksOfUser(userid).OrderBy(t => t.Name).ToListAsync();
+
+    Tree<TaskWithSubtreePath> tree;
+
+    if (ViewData["taskid"] == null)
+    {
+        tree = null;
+    } else
+    {
+        if (!(await taskService.HasUserTask((int) ViewData["taskid"], userid)))
+        {
+            tree = null;
+        } else
+        {
+            tree = await taskService.GetTreeWithParentsOfTask((int)Model);
+
+            await SetAllDescendants(tree.HeadNode.SubNodes);
+        }
+    }
+
+}
+
+@functions{
+    public async System.Threading.Tasks.Task SetAllDescendants(List<Node<TestTask.Models.TaskWithSubtreePath>> nodes)
+    {
+        if (nodes == null || nodes.Count() == 0)
+        {
+            return;
+        }
+
+        foreach (var node in nodes)
+        {
+            await SetAllDescendants(node.SubNodes);
+        }
+
+        var neigborTasks = await taskService.GetClosestDescendantTasks((int)nodes[0].Value.ParentTaskId)
+            .Where(t => !nodes.Any(n => n.Value.Id == t.Id))
+            .ToListAsync();
+
+        foreach(var task in neigborTasks)
+        {
+            var taskwithpath = new TaskWithSubtreePath()
+            {
+                Name = task.Name,
+                Id = task.Id,
+                UserId = task.UserId
+            };
+            nodes.Add(new Node<TestTask.Models.TaskWithSubtreePath>()
+            {
+                Value = taskwithpath
+            });
+        }
+
+        nodes.Sort((n1, n2) => n1.Value.Name.CompareTo(n2.Value.Name));
+
+    }
+}
+
+<ul>
+    
+    @foreach(var task in terminalTasks)
+    {
+        string src;
+        bool hasSubNodes = tree != null && task.Id == tree.HeadNode.Value.Id && tree.HeadNode.SubNodes != null && tree.HeadNode.SubNodes.Count() != 0;
+
+        if (hasSubNodes)
+        {
+            src = "https://png.icons8.com/windows/15/000000/expand-arrow.png";
+        } else
+        {
+            src = "https://png.icons8.com/ios-glyphs/15/000000/forward.png";
+        }
+
+        string classs = "";
+
+        if (ViewData["taskid"] != null && task.Id == (int)ViewData["taskid"])
+        {
+            classs = "selected-task";
+        }
+
+        <li>
+        
+            <div class="d-flex align-items-center hui ">
+                <img src="@src">
+                <a class="@classs" asp-action="index" asp-controller="task" asp-route-id="@task.Id">@task.Name</a>
+            </div>
+
+            @if(hasSubNodes)
+            {
+                <partial name="_SubTasksPartialView" model="tree.HeadNode.SubNodes"/>
+            }
+
+        </li>
+    }
+    
+</ul>
+@if (terminalTasks == null || terminalTasks.Count() == 0)
+{
+    <div style="margin-bottom:15px" class="row justify-content-center">
+        <span>You haven't created any task yet!</span>
+    </div>
+}
+<div class="row justify-content-center">
+    <a href="/task/create" style="color:white" class="btn btn-success"  role="button">+</a>
+</div>

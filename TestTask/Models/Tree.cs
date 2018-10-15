@@ -16,6 +16,6 @@ namespace TestTask.Models
 
         public Node<T> ParentNode { get; set; }
 
-        public ICollection<Node<T>> SubNodes { get; set; }
+        public List<Node<T>> SubNodes { get; set; }
     }
 }

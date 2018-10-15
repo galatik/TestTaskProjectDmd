@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using TestTask.Models;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -16,6 +18,8 @@ namespace TestTask.Data
         public DbSet<Models.Task> Tasks { get; set; }
 
         public DbQuery<TaskWithSubtreePath> taskWithSubtreePaths { get; set; }
+
+     
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -60,6 +64,28 @@ namespace TestTask.Data
             builder.Entity<Models.Task>().Property(t => t.Performers).IsRequired(false);
 
             builder.Entity<Models.Task>().Property(t => t.Description).IsRequired(false);
+        }
+
+        public async System.Threading.Tasks.Task CallProcedure(string procedureName, ICollection<MySqlParameter> parameters)
+        {
+            MySqlConnection conn = Database.GetDbConnection() as MySqlConnection;
+
+            conn.Open();
+
+            string rtn = procedureName;
+
+            MySqlCommand cmd = new MySqlCommand(rtn, conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            foreach(var parameter in parameters)
+            {
+                cmd.Parameters.Add(parameter);
+            }
+            
+            await cmd.ExecuteNonQueryAsync();
+
+            conn.Close();
         }
 
     }

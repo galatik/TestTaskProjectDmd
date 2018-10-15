@@ -27,7 +27,7 @@ namespace TestTask.Data
                     $"where id != taskid INTO result; " +
                 $"END");
                 context.Database.ExecuteSqlCommand(
-                        $"CREATE PROCEDURE getCompletionTimeOfDesc(in taskid int(11), out result time(6)) " +
+                        $"CREATE PROCEDURE getCompletionTimeOfDesc(in taskid int(11), out result int) " +
                         $"BEGIN " +
                             $"WITH recursive task_path (id, CompletionTimeInSec) as ( " +
                             $"select id, time_to_sec(CompletionTime) as CompletionTimeInSec from tasks " +
@@ -35,22 +35,32 @@ namespace TestTask.Data
                             $"union all " +
                             $"select t.id, time_to_sec(t.CompletionTime) as CompletionTimeInSec " +
                             $"from tasks as t join task_path as tp " +
-                            $"on tp.id = t.parenttaskid ) SELECT sec_to_time(sum(CompletionTimeInSec)) from task_path " +
+                            $"on tp.id = t.parenttaskid ) SELECT sum(CompletionTimeInSec) from task_path " +
                             $"where id != taskid into result; " +
                         $"END");
                 context.Database.ExecuteSqlCommand(
                         $"create procedure getAllTaskDescendants(in taskid int(11)) " +
                         $"BEGIN " +
                             $"WITH recursive task_path as ( " +
-                            $"select id, name, Description, Performers, CreationDate, Status, PlannedLaboriousness, " +
-                            $"CompletionTime, ActualCompletionDate, UserId, CAST(id AS CHAR(200)) as path from tasks " +
+                            $"select id, name, UserId, CAST(id AS CHAR(200)) as path, parentTaskId from tasks " +
                             $"where id = taskid " +
                             $"union all " +
-                            $"select t.id, t.name, t.Description, t.Performers, t.CreationDate, t.Status, t.PlannedLaboriousness, " +
-                            $"t.CompletionTime, t.ActualCompletionDate, t.UserId, concat(tp.path,',',t.id) as path " +
+                            $"select t.id, t.name, t.UserId, concat(tp.path,',',t.id) as path, t.parentTaskId " +
                             $"from tasks as t join task_path as tp " +
                             $"on tp.id = t.parenttaskid ) SELECT * from task_path; " +
                         $"END");
+                context.Database.ExecuteSqlCommand(
+                    $"create procedure getAllTaskParents(in taskid int(11)) " +
+                    $"BEGIN " +
+                    $"WITH recursive task_path  as ( " +
+                    $"select id, name, UserId, CAST(id AS CHAR(200)) as path, parenttaskid from tasks " +
+                    $"where id = taskid " +
+                    $"union all " +
+                    $"select t.id, t.name, t.UserId, concat(t.parenttaskid,',',tp.path), t.ParentTaskId " +
+                    $"from tasks as t join task_path as tp " +
+                    $"on tp.parenttaskid = t.id) SELECT * from task_path; " +
+                    $"END"
+                    );
             }
             
             List<User> users;

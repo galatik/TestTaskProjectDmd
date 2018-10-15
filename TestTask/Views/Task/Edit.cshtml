@@ -1,0 +1,81 @@
+﻿@model TestTask.Models.Task
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="row justify-content-center">
+    <h2 class="col-auto">Edit</h2>
+    <div class="w-100"></div>
+    <h3 class="col-auto">@Model.Name</h3>
+    <div class="w-100"></div>
+    <div style="margin-top:40px" class="col-10">
+        <form action="/task/edit" method="post">
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label for="Name">Name:</label>
+                    <input asp-for="Name" type="text" class="form-control" id="Name" value="@Model.Name">
+                </div>
+                <div class="form-group col-6">
+                    <label for="Performers">Performers:</label>
+                    <input asp-for="Performers" type="text" class="form-control" id="Performers" value="@Model.Performers">
+                </div>
+                <div class="form-group col-4">
+                    <label for="PlannedLab">Planned laboriusness:</label>
+                    <input asp-for="PlannedLaboriousness" type="number" class="form-control" id="PlannedLab" value="@Model.PlannedLaboriousness">
+                </div>
+                <div class="form-group col-4">
+                    <label for="PlannedComTime">Planned completion time</label>
+                    <input asp-for="CompletionTime" type="time" class="form-control" id="PlannedComTime" value="@Model.CompletionTime">
+                </div>
+                <div class="form-group col-4">
+                    <label for="Status">Status</label>
+                    <select asp-for="Status" id="Status" class="form-control">
+                        @if (Model.Status == TestTask.Models.TaskStatus.Assigned)
+                        {
+                            <option selected>@TestTask.Models.TaskStatus.Assigned</option>
+                        }
+                        else
+                        {
+                            <option>@TestTask.Models.TaskStatus.Assigned</option>
+                        }
+                        @if (Model.Status == TestTask.Models.TaskStatus.Completed)
+                        {
+                            <option selected>@TestTask.Models.TaskStatus.Completed</option>
+                        }
+                        else
+                        {
+                            <option>@TestTask.Models.TaskStatus.Completed</option>
+                        }
+                        @if (Model.Status == TestTask.Models.TaskStatus.InPerform)
+                        {
+                            <option selected>@TestTask.Models.TaskStatus.InPerform</option>
+                        }
+                        else
+                        {
+                            <option>@TestTask.Models.TaskStatus.InPerform</option>
+                        }
+                        @if (Model.Status == TestTask.Models.TaskStatus.Suspended)
+                        {
+                            <option selected>@TestTask.Models.TaskStatus.Suspended</option>
+                        }
+                        else
+                        {
+                            <option>@TestTask.Models.TaskStatus.Suspended</option>
+                        }
+                        
+                    </select>
+                </div>
+                <div class="form-group col-8">
+                    <label for="Description">Description</label>
+                    <textarea asp-for="Description" id="Description" class="form-control"></textarea>
+                </div>
+                <input hidden asp-for="Id" value="@Model.Id"/>
+                <input hidden asp-for="ParentTaskId" value="@Model.ParentTaskId" />
+                <input hidden asp-for="UserId" value="@Model.UserId" />
+                <div class="form-group col-12">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
